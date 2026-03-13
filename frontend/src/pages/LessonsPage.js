@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Plus, CalendarIcon, Clock, BookOpen, ChevronRight,
-  Send, Camera, X, Lock, Image as ImageIcon, Loader2
+  Send, Camera, X, Lock, Image as ImageIcon, Loader2, MessageSquarePlus
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -258,6 +258,18 @@ export default function LessonsPage() {
                       </span>
                     ))}
                   </div>
+                  {/* Feedback CTA for students */}
+                  {user?.role === "student" && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <span
+                        className="inline-flex items-center gap-1.5 text-[#F5A623] text-xs font-semibold uppercase tracking-wider bg-[#F5A623]/10 px-3 py-1.5 rounded-sm border border-[#F5A623]/20 hover:bg-[#F5A623]/20 transition-colors"
+                        data-testid={`feedback-cta-${lesson.id}`}
+                      >
+                        <MessageSquarePlus className="w-3.5 h-3.5" />
+                        Tocca per scrivere feedback
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-[#F5A623] transition-colors shrink-0 mt-1" />
               </div>
@@ -424,13 +436,15 @@ export default function LessonsPage() {
 
               {/* Feedback Form (for students) */}
               {user?.role === "student" && (
-                <div className="mt-4 p-4 bg-[#0A0A0A] rounded-md border border-white/10" data-testid="feedback-form">
+                <div className="mt-4 p-4 bg-[#F5A623]/5 rounded-md border border-[#F5A623]/30" data-testid="feedback-form">
                   <h4
-                    className="text-white font-semibold text-sm tracking-wider uppercase mb-3"
+                    className="text-[#F5A623] font-bold text-base tracking-wider uppercase mb-1 flex items-center gap-2"
                     style={{ fontFamily: "Barlow Condensed, sans-serif" }}
                   >
-                    Invia Feedback
+                    <MessageSquarePlus className="w-5 h-5" />
+                    Scrivi il tuo Feedback
                   </h4>
+                  <p className="text-white/40 text-xs mb-3">Condividi la tua esperienza, suggerisci argomenti da rivedere, allega foto</p>
                   <Textarea
                     value={feedbackText}
                     onChange={(e) => setFeedbackText(e.target.value)}
