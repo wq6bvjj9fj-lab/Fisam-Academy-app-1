@@ -23,8 +23,10 @@ export default function Layout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-60 bg-[#0A0A0A] border-r border-white/10 flex-col z-40">
         <div className="p-6 flex flex-col items-center border-b border-white/10">
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-black flex items-center justify-center" data-testid="sidebar-logo">
-            <img src={LOGO_URL} alt="FISAM" className="w-[120%] h-[120%] object-cover" />
+          <div className="w-[72px] h-[72px] rounded-full bg-white p-[3px]" data-testid="sidebar-logo">
+            <div className="w-full h-full rounded-full overflow-hidden bg-black">
+              <img src={`${LOGO_URL}?v=2`} alt="FISAM" className="w-full h-full object-contain" />
+            </div>
           </div>
           <h1
             className="text-white text-lg font-bold tracking-wider uppercase mt-2"
@@ -78,8 +80,10 @@ export default function Layout() {
         {/* Top Header */}
         <header className="sticky top-0 z-30 bg-[#0A0A0A]/90 backdrop-blur-lg border-b border-white/10 px-4 md:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3 md:hidden">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-black flex items-center justify-center">
-              <img src={LOGO_URL} alt="FISAM" className="w-[120%] h-[120%] object-cover" />
+            <div className="w-9 h-9 rounded-full bg-white p-[2px]">
+              <div className="w-full h-full rounded-full overflow-hidden bg-black">
+                <img src={`${LOGO_URL}?v=2`} alt="FISAM" className="w-full h-full object-contain" />
+              </div>
             </div>
             <span
               className="text-white font-bold tracking-wider uppercase text-sm"
