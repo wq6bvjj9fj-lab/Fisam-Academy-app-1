@@ -4,7 +4,7 @@ import { useAuth } from "@/App";
 import NotificationsPanel from "@/components/NotificationsPanel";
 import { BookOpen, MessageSquare, Users, LogOut } from "lucide-react";
 
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_b0dda340-2f21-499f-9b25-125aab4c526f/artifacts/3anc79pq_IMG_3140.png";
+const LOGO_URL = `${process.env.REACT_APP_BACKEND_URL}/api/uploads/logo_fisam.png`;
 
 export default function Layout() {
   const { user, logout, isInstructor } = useAuth();
@@ -23,7 +23,9 @@ export default function Layout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-60 bg-[#0A0A0A] border-r border-white/10 flex-col z-40">
         <div className="p-6 flex flex-col items-center border-b border-white/10">
-          <img src={LOGO_URL} alt="FISAM" className="w-16 h-16 object-contain" data-testid="sidebar-logo" />
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-black flex items-center justify-center" data-testid="sidebar-logo">
+            <img src={LOGO_URL} alt="FISAM" className="w-[120%] h-[120%] object-cover" />
+          </div>
           <h1
             className="text-white text-lg font-bold tracking-wider uppercase mt-2"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
@@ -76,7 +78,9 @@ export default function Layout() {
         {/* Top Header */}
         <header className="sticky top-0 z-30 bg-[#0A0A0A]/90 backdrop-blur-lg border-b border-white/10 px-4 md:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3 md:hidden">
-            <img src={LOGO_URL} alt="FISAM" className="w-8 h-8 object-contain" />
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-black flex items-center justify-center">
+              <img src={LOGO_URL} alt="FISAM" className="w-[120%] h-[120%] object-cover" />
+            </div>
             <span
               className="text-white font-bold tracking-wider uppercase text-sm"
               style={{ fontFamily: "Barlow Condensed, sans-serif" }}

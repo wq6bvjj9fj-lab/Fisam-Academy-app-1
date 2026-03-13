@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_b0dda340-2f21-499f-9b25-125aab4c526f/artifacts/3anc79pq_IMG_3140.png";
+const LOGO_URL = `${process.env.REACT_APP_BACKEND_URL}/api/uploads/logo_fisam.png`;
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
@@ -49,12 +49,13 @@ export default function LoginPage() {
       <div className="w-full max-w-sm relative z-10 animate-fade-in">
         {/* Logo */}
         <div className="flex flex-col items-center mb-10">
-          <img
-            src={LOGO_URL}
-            alt="FISAM Academy"
-            className="w-32 h-32 object-contain mb-4"
-            data-testid="login-logo"
-          />
+          <div className="w-32 h-32 rounded-full overflow-hidden bg-black flex items-center justify-center mb-4" data-testid="login-logo">
+            <img
+              src={LOGO_URL}
+              alt="FISAM Academy"
+              className="w-[120%] h-[120%] object-cover"
+            />
+          </div>
           <h1
             className="text-3xl md:text-4xl font-bold tracking-wider text-white uppercase"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
