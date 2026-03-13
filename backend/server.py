@@ -55,6 +55,7 @@ class UserCreate(BaseModel):
     email: str
     password: str
     name: str
+    role: str = "student"
 
 class LessonCreate(BaseModel):
     title: str
@@ -127,13 +128,15 @@ async def create_user(req: UserCreate, instructor=Depends(require_instructor)):
     existing = await db.users.find_one({"email": req.email})
     if existing:
         raise HTTPException(status_code=400, detail="Email gia registrata")
+    if req.role not in ("student", "instructor"):
+        raise HTTPException(status_code=400, detail="Ruolo non valido")
     hashed = bcrypt.hashpw(req.password.encode(), bcrypt.gensalt()).decode()
     user = {
         "id": str(uuid.uuid4()),
         "email": req.email,
         "name": req.name,
         "password_hash": hashed,
-        "role": "student",
+        "role": req.role,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.users.insert_one(user)
@@ -146,12 +149,13 @@ async def list_users(instructor=Depends(require_instructor)):
 
 @api_router.delete("/users/{user_id}")
 async def delete_user(user_id: str, instructor=Depends(require_instructor)):
-    result = await db.users.delete_one({"id": user_id, "role": "student"})
+    if user_id == instructor["id"]:
+        raise HTTPException(status_code=400, detail="Non puoi eliminare te stesso")
+    result = await db.users.delete_one({"id": user_id})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Allievo non trovato")
-    # Also clean up notifications
+        raise HTTPException(status_code=404, detail="Utente non trovato")
     await db.notifications.delete_many({"user_id": user_id})
-    return {"message": "Allievo eliminato"}
+    return {"message": "Utente eliminato"}
 
 
 # === LESSONS ===

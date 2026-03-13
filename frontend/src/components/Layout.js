@@ -13,7 +13,7 @@ export default function Layout() {
   const navItems = [
     { path: "/lessons", label: "Lezioni", icon: BookOpen },
     { path: "/feedback", label: "Feedback", icon: MessageSquare },
-    ...(isInstructor ? [{ path: "/students", label: "Allievi", icon: Users }] : []),
+    ...(isInstructor ? [{ path: "/students", label: "Utenti", icon: Users }] : []),
   ];
 
   const isActive = (path) => location.pathname === path;

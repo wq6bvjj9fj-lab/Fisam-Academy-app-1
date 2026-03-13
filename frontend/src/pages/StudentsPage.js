@@ -8,11 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
-  Plus, Users, Trash2, Mail, Loader2, UserPlus, Eye, EyeOff, AlertTriangle
+  Plus, Users, Trash2, Mail, Loader2, UserPlus, Eye, EyeOff, AlertTriangle, Shield
 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function StudentsPage() {
-  const { token, isInstructor } = useAuth();
+  const { token, isInstructor, user: currentUser } = useAuth();
   const headers = { Authorization: `Bearer ${token}` };
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,7 @@ export default function StudentsPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [role, setRole] = useState("student");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchUsers = useCallback(async () => {
@@ -52,12 +54,13 @@ export default function StudentsPage() {
     }
     setCreating(true);
     try {
-      await axios.post(`${API}/users`, { name, email, password }, { headers });
-      toast.success("Allievo creato!");
+      await axios.post(`${API}/users`, { name, email, password, role }, { headers });
+      toast.success(role === "instructor" ? "Istruttore creato!" : "Allievo creato!");
       setCreateOpen(false);
       setName("");
       setEmail("");
       setPassword("");
+      setRole("student");
       fetchUsers();
     } catch (err) {
       toast.error(err.response?.data?.detail || "Errore nella creazione");
@@ -69,7 +72,7 @@ export default function StudentsPage() {
   const handleDelete = async (userId) => {
     try {
       await axios.delete(`${API}/users/${userId}`, { headers });
-      toast.success("Allievo eliminato");
+      toast.success("Utente eliminato");
       setDeleteConfirm(null);
       fetchUsers();
     } catch (err) {
@@ -97,9 +100,9 @@ export default function StudentsPage() {
             className="text-2xl md:text-3xl font-bold tracking-wider text-white uppercase"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
-            Gestione Allievi
+            Gestione Utenti
           </h2>
-          <p className="text-white/40 text-sm mt-1">{students.length} allievi iscritti</p>
+          <p className="text-white/40 text-sm mt-1">{instructors.length} istruttori, {students.length} allievi</p>
         </div>
         <button
           onClick={() => setCreateOpen(true)}
@@ -107,7 +110,7 @@ export default function StudentsPage() {
           data-testid="create-student-button"
         >
           <UserPlus className="w-4 h-4" />
-          <span className="hidden sm:inline">Nuovo Allievo</span>
+          <span className="hidden sm:inline">Nuovo Utente</span>
         </button>
       </div>
 
@@ -140,6 +143,15 @@ export default function StudentsPage() {
                 <Badge className="bg-[#F5A623]/20 text-[#F5A623] border-[#F5A623]/30 text-xs">
                   Istruttore
                 </Badge>
+                {user.id !== currentUser?.id && (
+                  <button
+                    onClick={() => setDeleteConfirm(user)}
+                    className="text-white/20 hover:text-red-400 transition-colors p-2"
+                    data-testid={`delete-instructor-${user.id}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -198,13 +210,28 @@ export default function StudentsPage() {
               className="text-white text-xl tracking-wider uppercase"
               style={{ fontFamily: "Barlow Condensed, sans-serif" }}
             >
-              Nuovo Allievo
+              Nuovo Utente
             </DialogTitle>
             <DialogDescription className="text-white/40">
-              Crea un account per un nuovo allievo
+              Crea un account per un nuovo utente
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateStudent} className="space-y-4 mt-2" data-testid="create-student-form">
+            <div className="space-y-2">
+              <Label className="text-white/70 text-xs tracking-wider uppercase">Ruolo</Label>
+              <Select value={role} onValueChange={setRole}>
+                <SelectTrigger
+                  className="bg-[#0A0A0A] border-white/20 text-white h-10 rounded-sm"
+                  data-testid="user-role-select"
+                >
+                  <SelectValue placeholder="Seleziona ruolo" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#121212] border-white/10">
+                  <SelectItem value="student">Allievo</SelectItem>
+                  <SelectItem value="instructor">Istruttore</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label className="text-white/70 text-xs tracking-wider uppercase">Nome completo</Label>
               <Input
@@ -257,7 +284,7 @@ export default function StudentsPage() {
               ) : (
                 <>
                   <UserPlus className="w-4 h-4" />
-                  Crea Allievo
+                  {role === "instructor" ? "Crea Istruttore" : "Crea Allievo"}
                 </>
               )}
             </button>
