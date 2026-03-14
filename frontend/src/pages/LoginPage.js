@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 
-const LOGO_URL = `${process.env.REACT_APP_BACKEND_URL}/api/uploads/logo_fisam.png`;
+const LOGO_URL = "/logo_fisam.png";
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
