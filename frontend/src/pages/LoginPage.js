@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 
-const LOGO_URL = const LOGO_URL = "https://customer-assets.emergentagent.com/job_dojo-connect-app/artifacts/cjlbrhqe_IMG_3569.png";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_dojo-connect-app/artifacts/cjlbrhqe_IMG_3569.png";
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
