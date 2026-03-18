@@ -46,14 +46,14 @@ export default function LoginPage() {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#F5A623]/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="w-full max-w-sm relative z-10 animate-fade-in">
+      <div className="w-full max-w-md relative z-10 animate-fade-in px-4">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-56 h-56 rounded-full ring-[3px] ring-white mb-4 shadow-[0_0_30px_rgba(245,166,35,0.25)] overflow-hidden" data-testid="login-logo">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-full border-4 border-white mb-4 shadow-[0_0_40px_rgba(245,166,35,0.3)] overflow-hidden" data-testid="login-logo">
             <img
-              src={`${LOGO_URL}?v=2`}
+              src={`${LOGO_URL}?v=3`}
               alt="FISAM Academy"
-              className="w-full h-full object-cover scale-105"
+              className="w-full h-full object-cover"
             />
           </div>
           <h1
