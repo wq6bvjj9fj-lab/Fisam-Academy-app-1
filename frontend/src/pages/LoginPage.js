@@ -42,24 +42,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
       <div className="w-full max-w-md animate-fade-in px-2">
-        <div className="flex flex-col items-center mb-4">
-          <div className="w-[90vw] h-[90vw] max-w-[400px] max-h-[400px] mx-auto mb-2" data-testid="login-logo">
+        <div className="flex flex-col items-center mb-1">
+          <div className="w-[95vw] h-[95vw] max-w-[440px] max-h-[440px] mx-auto" data-testid="login-logo">
             <img
               src={LOGO_URL}
               alt="FISAM Academy"
               className="w-full h-full object-contain"
             />
           </div>
-          <h1
-            className="text-2xl md:text-3xl font-bold tracking-wider text-white uppercase"
-            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-          >
-            FISAM ACADEMY
-          </h1>
-          <p className="text-[#A1A1AA] text-xs tracking-widest uppercase mt-1">Palermo</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4" data-testid="login-form">
+        <form onSubmit={handleSubmit} className="space-y-3" data-testid="login-form">
           <div className="space-y-1">
             <Label htmlFor="email" className="text-white/70 text-sm tracking-wider uppercase">
               Email
@@ -116,10 +109,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        <p className="text-center text-white/20 text-xs mt-4 tracking-wider uppercase">
-          Federazione Istituti Superiori Arti Marziali
-        </p>
       </div>
     </div>
   );
