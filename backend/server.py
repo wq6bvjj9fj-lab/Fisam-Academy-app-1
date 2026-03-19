@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -405,3 +405,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# === CODE FILES FOR GITHUB SYNC ===
+CODE_FILES_DIR = Path(__file__).parent.parent / "frontend" / "public" / "code-files"
+
+@app.get("/api/code/{filename}")
+async def get_code_file(filename: str):
+    filepath = CODE_FILES_DIR / filename
+    if not filepath.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    content = filepath.read_text(encoding="utf-8")
+    return PlainTextResponse(content, media_type="text/plain; charset=utf-8")
