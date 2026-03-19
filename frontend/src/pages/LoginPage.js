@@ -40,14 +40,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#F5A623]/5 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="w-full max-w-md relative z-10 animate-fade-in px-2">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-[85vw] h-[85vw] max-w-[400px] max-h-[400px] mx-auto mb-4 shadow-[0_0_40px_rgba(245,166,35,0.3)]" data-testid="login-logo">
+    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
+      <div className="w-full max-w-md animate-fade-in px-2">
+        <div className="flex flex-col items-center mb-4">
+          <div className="w-[60vw] h-[60vw] max-w-[280px] max-h-[280px] mx-auto mb-2" data-testid="login-logo">
             <img
               src={LOGO_URL}
               alt="FISAM Academy"
@@ -55,16 +51,16 @@ export default function LoginPage() {
             />
           </div>
           <h1
-            className="text-3xl md:text-4xl font-bold tracking-wider text-white uppercase"
+            className="text-2xl md:text-3xl font-bold tracking-wider text-white uppercase"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
             FISAM ACADEMY
           </h1>
-          <p className="text-[#A1A1AA] text-sm tracking-widest uppercase mt-1">Palermo</p>
+          <p className="text-[#A1A1AA] text-xs tracking-widest uppercase mt-1">Palermo</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5" data-testid="login-form">
-          <div className="space-y-2">
+        <form onSubmit={handleSubmit} className="space-y-4" data-testid="login-form">
+          <div className="space-y-1">
             <Label htmlFor="email" className="text-white/70 text-sm tracking-wider uppercase">
               Email
             </Label>
@@ -79,7 +75,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="password" className="text-white/70 text-sm tracking-wider uppercase">
               Password
             </Label>
@@ -121,7 +117,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-white/20 text-xs mt-8 tracking-wider uppercase">
+        <p className="text-center text-white/20 text-xs mt-4 tracking-wider uppercase">
           Federazione Istituti Superiori Arti Marziali
         </p>
       </div>
