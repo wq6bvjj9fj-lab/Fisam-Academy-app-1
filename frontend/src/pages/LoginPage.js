@@ -44,7 +44,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md animate-fade-in px-2">
         {/* Logo */}
         <div className="flex flex-col items-center mb-4">
-          <div className="w-[60vw] h-[60vw] max-w-[280px] max-h-[280px] mx-auto mb-2" data-testid="login-logo">
+          <div className="w-[90vw] h-[90vw] max-w-[400px] max-h-[400px] mx-auto mb-2" data-testid="login-logo">
             <img
               src={LOGO_URL}
               alt="FISAM Academy"
