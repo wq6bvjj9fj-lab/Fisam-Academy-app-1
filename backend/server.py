@@ -7,6 +7,7 @@ import os
 import logging
 import uuid
 import asyncio
+import json
 from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -19,6 +20,12 @@ try:
     HAS_RESEND = True
 except ImportError:
     HAS_RESEND = False
+
+try:
+    from pywebpush import webpush, WebPushException
+    HAS_WEBPUSH = True
+except ImportError:
+    HAS_WEBPUSH = False
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -69,6 +76,10 @@ class FeedbackCreate(BaseModel):
     text: str
     photos: List[str] = []
     is_private: bool = False
+
+class PushSubscription(BaseModel):
+    endpoint: str
+    keys: dict
 
 
 # === AUTH HELPERS ===
@@ -195,6 +206,14 @@ async def create_lesson(req: LessonCreate, instructor=Depends(require_instructor
     # Send emails in background
     asyncio.create_task(send_lesson_emails(students, lesson))
 
+    # Send push notifications
+    student_ids = [s["id"] for s in students]
+    asyncio.create_task(send_push_to_users(
+        student_ids,
+        "Nuova Lezione",
+        f"{req.title} - {req.date} alle {req.time}"
+    ))
+
     return {k: v for k, v in lesson.items() if k != "_id"}
 
 @api_router.get("/lessons")
@@ -251,6 +270,14 @@ async def create_feedback(req: FeedbackCreate, user=Depends(get_current_user)):
         notifications.append(notification)
     if notifications:
         await db.notifications.insert_many(notifications)
+
+    # Send push to instructors
+    instructor_ids = [i["id"] for i in instructors]
+    asyncio.create_task(send_push_to_users(
+        instructor_ids,
+        "Nuovo Feedback",
+        f"{user['name']} ha inviato feedback per '{lesson['title']}'"
+    ))
 
     return {k: v for k, v in feedback.items() if k != "_id"}
 
@@ -330,6 +357,66 @@ async def mark_all_read(user=Depends(get_current_user)):
         {"$set": {"is_read": True}}
     )
     return {"message": "Tutte le notifiche segnate come lette"}
+
+
+# === PUSH NOTIFICATIONS ===
+@api_router.get("/push/vapid-key")
+async def get_vapid_key():
+    public_key = os.environ.get("VAPID_PUBLIC_KEY", "")
+    return {"publicKey": public_key}
+
+@api_router.post("/push/subscribe")
+async def push_subscribe(sub: PushSubscription, user=Depends(get_current_user)):
+    await db.push_subscriptions.update_one(
+        {"user_id": user["id"], "endpoint": sub.endpoint},
+        {"$set": {
+            "user_id": user["id"],
+            "endpoint": sub.endpoint,
+            "keys": sub.keys,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }},
+        upsert=True
+    )
+    return {"message": "Iscrizione push salvata"}
+
+@api_router.delete("/push/unsubscribe")
+async def push_unsubscribe(user=Depends(get_current_user)):
+    await db.push_subscriptions.delete_many({"user_id": user["id"]})
+    return {"message": "Iscrizione push rimossa"}
+
+async def send_push_to_user(user_id: str, title: str, body: str):
+    if not HAS_WEBPUSH:
+        return
+    private_key = os.environ.get("VAPID_PRIVATE_KEY", "").replace("\\n", "\n")
+    claim_email = os.environ.get("VAPID_CLAIM_EMAIL", "mailto:admin@fisam.it")
+    if not private_key:
+        return
+
+    subs = await db.push_subscriptions.find({"user_id": user_id}, {"_id": 0}).to_list(100)
+    for sub in subs:
+        try:
+            subscription_info = {
+                "endpoint": sub["endpoint"],
+                "keys": sub["keys"]
+            }
+            payload = json.dumps({"title": title, "body": body})
+            await asyncio.to_thread(
+                webpush,
+                subscription_info,
+                payload,
+                vapid_private_key=private_key,
+                vapid_claims={"sub": claim_email}
+            )
+        except WebPushException as e:
+            if e.response and e.response.status_code in (404, 410):
+                await db.push_subscriptions.delete_one({"endpoint": sub["endpoint"]})
+            logger.error(f"Push error per {user_id}: {e}")
+        except Exception as e:
+            logger.error(f"Push error per {user_id}: {e}")
+
+async def send_push_to_users(user_ids: list, title: str, body: str):
+    for uid in user_ids:
+        await send_push_to_user(uid, title, body)
 
 
 # === EMAIL (OPTIONAL) ===

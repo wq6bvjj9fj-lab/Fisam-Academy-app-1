@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/App";
 import NotificationsPanel from "@/components/NotificationsPanel";
+import PushNotificationManager from "@/components/PushNotificationManager";
 import { BookOpen, MessageSquare, Users, LogOut } from "lucide-react";
 
 const LOGO_URL = "/logo_fisam.png";
@@ -62,6 +63,7 @@ export default function Layout() {
               <p className="text-white/40 text-xs capitalize">{user?.role === "instructor" ? "Istruttore" : "Allievo"}</p>
             </div>
           </div>
+          <PushNotificationManager />
           <button
             onClick={logout}
             className="flex items-center gap-2 text-white/40 hover:text-red-400 text-sm px-3 py-2 w-full transition-colors"
