@@ -90,3 +90,47 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
 }
+
+/* FISAM Logo overrides - login page */
+[data-testid="login-logo"] {
+  width: 95vw !important;
+  height: 95vw !important;
+  max-width: 440px !important;
+  max-height: 440px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+[data-testid="login-logo"] > div {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+}
+[data-testid="login-logo"] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* FISAM Logo overrides - sidebar */
+[data-testid="sidebar-logo"] {
+  width: 96px !important;
+  height: 96px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+[data-testid="sidebar-logo"] > div {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+}
+[data-testid="sidebar-logo"] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
